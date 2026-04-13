@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 페르소나 생성기</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f7f6; color: #333; display: flex; justify-content: center; padding: 40px 20px; }
+        .container { background: white; max-width: 600px; width: 100%; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { font-size: 20px; color: #0056b3; margin-bottom: 5px; }
+        .progress { color: #888; font-size: 14px; margin-bottom: 20px; }
+        .question { font-size: 18px; font-weight: bold; margin-bottom: 15px; line-height: 1.4; }
+        textarea { width: 100%; height: 150px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; resize: vertical; box-sizing: border-box; margin-bottom: 20px; }
+        textarea:focus { outline: none; border-color: #0056b3; }
+        .btn-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background-color: #0056b3; color: white; }
+        .btn-primary:hover { background-color: #004494; }
+        .btn-secondary { background-color: #e0e0e0; color: #333; }
+        .btn-secondary:hover { background-color: #ccc; }
+        .hidden { display: none; }
+        #result-box { background-color: #f8f9fa; border: 1px solid #ddd; height: 300px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="wizard-view">
+    <h1>마스터 페르소나 빌더</h1>
+    <div class="progress" id="progress-text">Step 1 / 15</div>
+    <div class="question" id="question-text">질문이 여기에 표시됩니다.</div>
+    <textarea id="answer-input" placeholder="여기에 답변을 입력하세요... (불필요시 스킵 가능)"></textarea>
+    <div class="btn-group">
+        <button class="btn-primary" onclick="saveAndNext()">저장 및 다음</button>
+        <button class="btn-secondary" onclick="skipAndNext()">스킵 (Skip)</button>
+    </div>
+</div>
+
+<div class="container hidden" id="result-view">
+    <h1>최종 페르소나 프롬프트</h1>
+    <div class="progress">모든 질문이 완료되었습니다. 아래 프롬프트를 복사하여 사용하세요.</div>
+    <textarea id="result-box" readonly></textarea>
+    <div class="btn-group">
+        <button class="btn-primary" onclick="copyToClipboard()">복사하기</button>
+        <button class="btn-secondary" onclick="location.reload()">처음부터 다시하기</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        "당신(AI)의 직업이나 역할은 무엇입니까?", "당신의 핵심 성향 세 가지는 무엇입니까?", "당신이 속한 산업군이나 주요 활동 배경은 어디입니까?", "가장 자신 있어 하는 '필살기(핵심 역량)'는 무엇입니까?",
+        "이 채팅방에서 수행해야 할 '단 하나의 최종 목표'는 무엇입니까?", "현재 대화가 진행되는 상황이나 배경 맥락은 무엇입니까?", "문제를 해결할 때 가장 중요하게 생각하는 가치는 무엇입니까?", "사용자를 어떤 방식으로 돕고 싶습니까?",
+        "당신과 대화하는 상대방(사용자)은 누구입니까?", "상대방을 부르는 호칭은 무엇입니까?", "대화의 어조(Tone)는 어떠해야 합니까?", "절대로 보여서는 안 될 '금지된 태도'는 무엇입니까?",
+        "답변을 제공할 때 반드시 포함해야 할 요소가 있습니까?", "답변의 시각적 형태나 포맷은 어떻게 구성해야 합니까?", "대화를 이어가기 위해 AI가 먼저 질문을 던져도 됩니까?"
+    ];
+    let currentIndex = 0;
+    let answers = [];
+
+    const progressText = document.getElementById('progress-text');
+    const questionText = document.getElementById('question-text');
+    const answerInput = document.getElementById('answer-input');
+    const wizardView = document.getElementById('wizard-view');
+    const resultView = document.getElementById('result-view');
+    const resultBox = document.getElementById('result-box');
+
+    function updateView() {
+        progressText.innerText = `Step ${currentIndex + 1} / ${questions.length}`;
+        questionText.innerText = questions[currentIndex];
+        answerInput.value = '';
+        answerInput.focus();
+    }
+
+    function saveAndNext() {
+        answers.push(answerInput.value.trim());
+        advance();
+    }
+
+    function skipAndNext() {
+        answers.push('');
+        advance();
+    }
+
+    function advance() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            updateView();
+        } else {
+            generatePrompt();
+        }
+    }
+
+    function generatePrompt() {
+        wizardView.classList.add('hidden');
+        resultView.classList.remove('hidden');
+        
+        let promptLines = ["당신은 다음의 페르소나를 완벽하게 숙지하고 그에 맞게 행동해야 합니다.\n"];
+        
+        const labels = [
+            "[역할] 당신은 ", "[성향] 당신의 핵심 성향은 ", "[배경] 당신은 ", "[핵심역량] 당신의 필살기는 ",
+            "[목표] 당신의 최종 목표는 ", "[상황/맥락] 현재 상황은 ", "[해결가치] 문제 해결 시 가장 중요한 가치는 ", "[지원방식] 당신은 사용자를 ",
+            "[대화상대] 당신과 대화하는 상대는 ", "[호칭] 상대를 부를 때는 ", "[어조] 당신의 어조는 ", "[금지태도] 다음 태도는 절대 금지합니다: ",
+            "[필수요소] 답변 시 반드시 포함할 것: ", "[출력포맷] 답변의 형태: ", "[질문규칙] 대화 진행 방식: "
+        ];
+        const suffixes = [
+            "입니다.", "입니다.", "에서 활동합니다.", "입니다.",
+            "입니다.", "입니다.", "입니다.", "방식으로 돕습니다.",
+            "입니다.", "라고 부르십시오.", "유지하십시오.", "",
+            "", "를 따르십시오.", "에 따르십시오."
+        ];
+
+        for (let i = 0; i < answers.length; i++) {
+            if (answers[i] !== '') {
+                promptLines.push(`- ${labels[i]}${answers[i]}${suffixes[i]}`);
+            }
+        }
+
+        resultBox.value = promptLines.join('\n');
+    }
+
+    function copyToClipboard() {
+        resultBox.select();
+        document.execCommand('copy');
+        alert('프롬프트가 클립보드에 복사되었습니다. 채팅창에 붙여넣어 사용하세요!');
+    }
+
+    updateView();
+</script>
+
+</body>
+</html>
