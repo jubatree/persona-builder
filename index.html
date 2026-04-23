@@ -283,15 +283,13 @@ function updateApiStatus() {
   document.getElementById('logoutBtn').classList.toggle('show', connected);
 }
 
-async function startConversation() {
-  if (!apiKey) {
-    addBubble('ai', '안녕하세요! 지금 만들려는 마스터 프롬프트로 AI에게 맡길 프로젝트가 어떤 건가요? 편하게 말씀해 주세요 😊\n\n⚠️ 대화를 시작하려면 상단의 "API 키 설정"을 먼저 눌러주세요.');
-    return;
-  }
-  showTyping();
-  const reply = await callAI([]);
-  hideTyping();
-  if (reply) { addBubble('ai', reply); history.push({ role: 'assistant', content: reply }); }
+function startConversation() {
+  const firstMsg = apiKey
+    ? '안녕하세요! 지금 만들려는 마스터 프롬프트로 AI에게 맡길 프로젝트가 어떤 건가요? 편하게 말씀해 주세요 😊'
+    : '안녕하세요! 지금 만들려는 마스터 프롬프트로 AI에게 맡길 프로젝트가 어떤 건가요? 편하게 말씀해 주세요 😊\n\n⚠️ 대화를 시작하려면 상단의 "API 키 설정"을 먼저 눌러주세요.';
+  addBubble('ai', firstMsg);
+  // 첫 메시지는 히스토리에 assistant로 추가해 맥락 유지
+  if (apiKey) history.push({ role: 'assistant', content: firstMsg });
 }
 
 async function sendMessage() {
@@ -446,6 +444,8 @@ function saveKey() {
     document.getElementById('chatWrap').innerHTML = '';
     history = [];
     startConversation();
+  } else {
+    // 이미 대화 중이면 재시작 안 함
   }
 }
 
