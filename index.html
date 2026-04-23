@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --bg: #0f0f13;
   --surface: #17171f;
@@ -22,208 +21,86 @@
   --ai-bubble: #1a1a28;
   --ai-border: #2a2a42;
   --green: #4ade80;
+  --red: #f87171;
   --radius: 16px;
 }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ── Header ── */
-.header {
-  width: 100%;
-  max-width: 720px;
-  padding: 32px 24px 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-.logo {
-  font-family: 'Noto Serif KR', serif;
-  font-size: 22px;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.logo-sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.1em; }
-.api-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-dim);
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+/* Header */
+.header { width: 100%; max-width: 720px; padding: 28px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+.logo { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.08em; }
+.header-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.api-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
 .api-badge:hover { border-color: var(--accent); color: var(--accent); }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
+.api-badge.connected { border-color: #2a4a2a; color: var(--green); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
 .dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.logout-btn { display: none; align-items: center; gap: 5px; font-size: 12px; color: var(--red); background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); border-radius: 99px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.logout-btn:hover { background: rgba(248,113,113,0.15); border-color: var(--red); }
+.logout-btn.show { display: flex; }
 
-/* ── API Key Modal ── */
-.modal-bg {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-}
+/* Modal base */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.show { display: flex; }
-.modal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  width: 90%;
-  max-width: 420px;
-}
-.modal h3 { font-family: 'Noto Serif KR', serif; font-size: 18px; margin-bottom: 8px; }
-.modal p { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.6; }
-.modal input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: var(--text);
-  font-size: 14px;
-  font-family: monospace;
-  margin-bottom: 12px;
-}
+
+/* Settings modal */
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 440px; }
+.modal h3 { font-family: 'Noto Serif KR', serif; font-size: 18px; margin-bottom: 6px; }
+.modal-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6; }
+.ai-selector { display: flex; gap: 8px; margin-bottom: 14px; }
+.ai-btn { flex: 1; padding: 10px 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface2); color: var(--text-dim); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; font-family: 'DM Sans', sans-serif; line-height: 1.4; }
+.ai-btn:hover { border-color: var(--accent); color: var(--text); }
+.ai-btn.active { border-color: var(--accent); background: rgba(124,106,247,0.12); color: var(--accent); }
+.ai-btn .ai-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+.ai-warning { font-size: 12px; color: var(--accent2); background: rgba(247,162,106,0.08); border: 1px solid rgba(247,162,106,0.2); border-radius: 8px; padding: 9px 12px; margin-bottom: 14px; line-height: 1.5; display: none; }
+.ai-warning.show { display: block; }
+.modal-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+.modal input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); font-size: 14px; font-family: monospace; margin-bottom: 10px; }
 .modal input:focus { outline: none; border-color: var(--accent); }
+.key-hint { font-size: 11px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; }
+.key-hint a { color: var(--accent); text-decoration: none; }
+.key-hint a:hover { text-decoration: underline; }
 .modal-btns { display: flex; gap: 8px; }
-.modal-btns button {
-  flex: 1; padding: 11px;
-  border: none; border-radius: 8px;
-  font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: 0.2s;
-}
+.modal-btns button { flex: 1; padding: 11px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
 .btn-save { background: var(--accent); color: white; }
 .btn-save:hover { opacity: 0.85; }
 .btn-cancel { background: var(--surface2); color: var(--text-dim); }
+.btn-cancel:hover { color: var(--text); }
 
-/* ── Chat area ── */
-.chat-wrap {
-  width: 100%;
-  max-width: 720px;
-  flex: 1;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  min-height: 0;
-}
+/* Logout modal */
+.logout-modal { background: var(--surface); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 360px; text-align: center; }
+.logout-modal h3 { font-size: 17px; margin-bottom: 8px; }
+.logout-modal p { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 14px; }
+.warn-box { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--red); margin-bottom: 20px; line-height: 1.6; }
+.logout-btns { display: flex; gap: 8px; }
+.btn-logout-confirm { flex: 1; padding: 11px; background: var(--red); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.btn-logout-confirm:hover { opacity: 0.85; }
+.btn-logout-cancel { flex: 1; padding: 11px; background: var(--surface2); color: var(--text-dim); border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
-.bubble-row {
-  display: flex;
-  gap: 12px;
-  animation: fadeUp 0.3s ease;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* Chat */
+.chat-wrap { width: 100%; max-width: 720px; flex: 1; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; min-height: 300px; }
+.bubble-row { display: flex; gap: 12px; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .bubble-row.user { flex-direction: row-reverse; }
-
-.avatar {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
 .avatar.ai { background: linear-gradient(135deg, var(--accent), #a78bfa); }
-.avatar.user { background: var(--surface2); border: 1px solid var(--border); }
-
-.bubble {
-  max-width: 80%;
-  padding: 14px 18px;
-  border-radius: 14px;
-  font-size: 15px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.bubble.ai {
-  background: var(--ai-bubble);
-  border: 1px solid var(--ai-border);
-  border-top-left-radius: 4px;
-}
-.bubble.user {
-  background: var(--user-bubble);
-  border: 1px solid var(--user-border);
-  border-top-right-radius: 4px;
-  color: #c8e6c9;
-}
-
-/* 타이핑 인디케이터 */
-.typing {
-  display: flex; gap: 5px; align-items: center;
-  padding: 14px 18px;
-  background: var(--ai-bubble);
-  border: 1px solid var(--ai-border);
-  border-radius: 14px;
-  border-top-left-radius: 4px;
-}
-.typing span {
-  width: 7px; height: 7px;
-  background: var(--text-dim);
-  border-radius: 50%;
-  animation: bounce 1.2s infinite;
-}
+.avatar.user { background: var(--surface2); border: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+.bubble { max-width: 80%; padding: 13px 17px; border-radius: 14px; font-size: 15px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+.bubble.ai { background: var(--ai-bubble); border: 1px solid var(--ai-border); border-top-left-radius: 4px; }
+.bubble.user { background: var(--user-bubble); border: 1px solid var(--user-border); border-top-right-radius: 4px; color: #c8e6c9; }
+.typing { display: flex; gap: 5px; align-items: center; padding: 14px 18px; background: var(--ai-bubble); border: 1px solid var(--ai-border); border-radius: 14px; border-top-left-radius: 4px; }
+.typing span { width: 7px; height: 7px; background: var(--text-dim); border-radius: 50%; animation: bounce 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-  40% { transform: translateY(-6px); opacity: 1; }
-}
+@keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-6px); opacity: 1; } }
 
-/* ── 결과 프롬프트 박스 ── */
-.result-wrap {
-  background: var(--surface2);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-top: 4px;
-}
-.result-label {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-.result-text {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--text);
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 320px;
-  overflow-y: auto;
-}
-.result-actions { display: flex; gap: 8px; margin-top: 14px; }
-.result-actions button {
-  padding: 9px 18px;
-  border: none; border-radius: 8px;
-  font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: 0.2s;
-  font-family: 'DM Sans', sans-serif;
-}
+/* Result */
+.result-wrap { background: var(--surface2); border: 1px solid var(--accent); border-radius: var(--radius); padding: 20px; margin-top: 4px; max-width: 560px; }
+.result-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 500; }
+.result-text { font-size: 13px; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; }
+.result-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.result-actions button { padding: 8px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
 .btn-copy { background: var(--accent); color: white; }
 .btn-copy:hover { opacity: 0.85; }
 .btn-dl { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); }
@@ -231,101 +108,42 @@ body {
 .btn-new { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); }
 .btn-new:hover { border-color: var(--green); color: var(--green); }
 
-/* ── Input bar ── */
-.input-bar {
-  width: 100%;
-  max-width: 720px;
-  padding: 0 24px 28px;
-}
-.input-inner {
-  display: flex;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  transition: border-color 0.2s;
-}
+/* Input */
+.input-bar { width: 100%; max-width: 720px; padding: 0 24px 28px; }
+.input-inner { display: flex; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; transition: border-color 0.2s; }
 .input-inner:focus-within { border-color: var(--accent); }
-textarea#userInput {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  resize: none;
-  font-size: 15px;
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text);
-  line-height: 1.5;
-  min-height: 24px;
-  max-height: 120px;
-}
+textarea#userInput { flex: 1; background: transparent; border: none; outline: none; resize: none; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text); line-height: 1.5; min-height: 24px; max-height: 120px; }
 textarea#userInput::placeholder { color: var(--text-dim); }
-.send-btn {
-  width: 38px; height: 38px;
-  background: var(--accent);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  align-self: flex-end;
-  transition: opacity 0.2s;
-}
+.send-btn { width: 38px; height: 38px; background: var(--accent); border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; align-self: flex-end; transition: opacity 0.2s; }
 .send-btn:hover { opacity: 0.85; }
 .send-btn:disabled { opacity: 0.3; cursor: default; }
 .send-btn svg { width: 18px; height: 18px; fill: white; }
 .input-hint { font-size: 12px; color: var(--text-dim); margin-top: 8px; text-align: center; }
-
-/* ── Toast ── */
-.toast {
-  position: fixed; bottom: 90px; left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background: var(--surface);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 10px 20px;
-  border-radius: 99px;
-  font-size: 13px;
-  opacity: 0;
-  transition: all 0.3s;
-  pointer-events: none;
-  z-index: 200;
-}
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--surface); border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; border-radius: 99px; font-size: 13px; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 200; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── No API state ── */
-.no-api-msg {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-dim);
-  font-size: 14px;
-  line-height: 1.8;
-}
-.no-api-msg strong { color: var(--accent2); }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div>
     <div class="logo">마스터 프롬프트 빌더</div>
     <div class="logo-sub">AI와 대화로 완성하는 프로젝트 페르소나</div>
   </div>
-  <div class="api-badge" onclick="openModal()">
-    <div class="dot" id="apiDot"></div>
-    <span id="apiStatus">API 키 설정</span>
+  <div class="header-right">
+    <button class="logout-btn" id="logoutBtn" onclick="openLogoutModal()">🔒 로그아웃</button>
+    <div class="api-badge" id="apiBadge" onclick="openModal()">
+      <div class="dot" id="apiDot"></div>
+      <span id="apiStatus">API 키 설정</span>
+    </div>
   </div>
 </div>
 
-<!-- Chat -->
 <div class="chat-wrap" id="chatWrap"></div>
 
-<!-- Input -->
 <div class="input-bar">
   <div class="input-inner">
-    <textarea id="userInput" rows="1" placeholder="여기에 입력하세요... (Shift+Enter로 줄바꿈)"></textarea>
+    <textarea id="userInput" rows="1" placeholder="여기에 입력하세요..."></textarea>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
@@ -333,12 +151,28 @@ textarea#userInput::placeholder { color: var(--text-dim); }
   <div class="input-hint">Enter로 전송 · Shift+Enter로 줄바꿈</div>
 </div>
 
-<!-- API Modal -->
+<!-- Settings Modal -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
-    <h3>Anthropic API 키</h3>
-    <p>대화형 페르소나 생성을 위해 API 키가 필요해요.<br>키는 브라우저에만 저장되며 외부로 전송되지 않아요.</p>
+    <h3>AI 및 API 키 설정</h3>
+    <p class="modal-desc">사용할 AI를 선택하고 해당 API 키를 입력하세요.<br>키는 이 브라우저에만 저장됩니다.</p>
+    <div class="ai-selector">
+      <button class="ai-btn" data-ai="claude" onclick="selectAI('claude',this)">
+        <span class="ai-icon">✦</span>Claude
+      </button>
+      <button class="ai-btn" data-ai="gemini" onclick="selectAI('gemini',this)">
+        <span class="ai-icon">♊</span>Gemini
+      </button>
+      <button class="ai-btn" data-ai="gpt" onclick="selectAI('gpt',this)">
+        <span class="ai-icon">⬡</span>ChatGPT
+      </button>
+    </div>
+    <div class="ai-warning" id="aiWarning">
+      ⚠️ 이 도구는 Claude에 최적화되어 있습니다. 다른 AI를 선택하면 마스터 프롬프트 품질이 기대에 미치지 못할 수 있어요.
+    </div>
+    <div class="modal-label" id="keyLabel">Anthropic API 키</div>
     <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+    <div class="key-hint" id="keyHint">API 키 발급: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
     <div class="modal-btns">
       <button class="btn-save" onclick="saveKey()">저장하기</button>
       <button class="btn-cancel" onclick="closeModal()">취소</button>
@@ -346,23 +180,38 @@ textarea#userInput::placeholder { color: var(--text-dim); }
   </div>
 </div>
 
+<!-- Logout Modal -->
+<div class="modal-bg" id="logoutModalBg">
+  <div class="logout-modal">
+    <h3>🔒 로그아웃</h3>
+    <p>저장된 API 키를 이 브라우저에서 삭제합니다.<br>다음 접속 시 다시 입력해야 해요.</p>
+    <div class="warn-box">
+      ⚠️ 공용 PC에서는 반드시 로그아웃하세요.<br>
+      그래야 내 API 키와 크레딧을 보호할 수 있어요.
+    </div>
+    <div class="logout-btns">
+      <button class="btn-logout-confirm" onclick="doLogout()">로그아웃</button>
+      <button class="btn-logout-cancel" onclick="closeLogoutModal()">취소</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
 let apiKey = localStorage.getItem('mpb_key') || '';
-let history = []; // {role, content}
+let aiProvider = localStorage.getItem('mpb_ai') || 'claude';
+let selectedAI = aiProvider;
+let history = [];
 let isLoading = false;
-let promptGenerated = false;
 
-// ── System Prompt ──
 const SYSTEM = `당신은 사용자가 AI 채팅에서 사용할 "마스터 프롬프트"를 만들어주는 전문 도우미입니다.
 
-목표: 사용자와 자연스러운 대화를 나누면서 아래 핵심 정보를 파악하고, 최적의 마스터 프롬프트를 생성하는 것입니다.
+목표: 사용자와 자연스러운 대화를 나누면서 핵심 정보를 파악하고, 최적의 마스터 프롬프트를 생성하는 것입니다.
 
 파악해야 할 핵심 정보:
-1. 프로젝트가 무엇인지 (어떤 일인지)
-2. 언제, 무엇이 되면 끝나는지 (완료 조건)
+1. 프로젝트가 무엇인지
+2. 무엇이 되면 끝나는지 (완료 조건)
 3. 지금 어느 단계인지 (시작 전 / 진행 중 / 막힌 상태)
 4. AI에게 어떤 역할을 맡기고 싶은지
 5. 최종 결과물이 어떤 형태인지
@@ -370,42 +219,68 @@ const SYSTEM = `당신은 사용자가 AI 채팅에서 사용할 "마스터 프�
 
 대화 원칙:
 - 절대 여러 질문을 한꺼번에 하지 마세요. 반드시 하나씩만 물어보세요.
-- 전문 용어를 쓰지 말고, 일상 대화처럼 편하게 물어보세요.
-- 사용자의 답변에서 단서를 포착해 다음 질문을 자연스럽게 이어가세요.
-- 사용자가 잘 모르거나 막혀있으면 예시를 들어 유도하세요.
-- 5~8번의 대화로 충분히 파악되면 마스터 프롬프트를 생성하세요.
+- 전문 용어 없이 일상 대화처럼 편하게 물어보세요.
+- 사용자 답변에서 단서를 포착해 다음 질문을 자연스럽게 이어가세요.
+- 잘 모르거나 막혀있으면 예시를 들어 유도하세요.
+- 5~8번 대화로 충분히 파악되면 마스터 프롬프트를 생성하세요.
 
 마스터 프롬프트 생성 시:
-- 충분히 파악됐다고 판단되면 "이제 마스터 프롬프트를 만들어드릴게요!" 라고 말하고
+- "이제 마스터 프롬프트를 만들어드릴게요!" 라고 먼저 말하고
 - 반드시 아래 형식으로 출력하세요:
 
 ===PROMPT_START===
-(여기에 완성된 마스터 프롬프트 전문)
+(완성된 마스터 프롬프트 전문)
 ===PROMPT_END===
 
-마스터 프롬프트는:
-- 자연스러운 문단 형태로 작성
-- "당신은 ~" 으로 시작
-- 역할, 목표, 완료조건, 방식, 결과물형태, 필요시 AI협업 원칙 포함
+마스터 프롬프트 기준:
+- "당신은 ~"으로 시작하는 자연스러운 문단 형태
+- 역할, 목표, 완료조건, 진행방식, 결과물형태 포함
+- 필요시 "현시점에서 해당 기능을 가장 잘 수행할 수 있는 AI를 선택하고, 필요시 복수의 AI에게 교차검증 후 통합하여 답변하세요" 포함
 - 해당 프로젝트에 즉시 쓸 수 있을 만큼 구체적으로
 
-첫 메시지는 반드시 이것으로 시작하세요:
+첫 메시지는 반드시:
 "안녕하세요! 지금 만들려는 마스터 프롬프트로 AI에게 맡길 프로젝트가 어떤 건가요? 편하게 말씀해 주세요 😊"`;
 
-// ── Init ──
+// Init
 updateApiStatus();
+syncAIButtons();
 startConversation();
 
+function syncAIButtons() {
+  document.querySelectorAll('.ai-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.ai === selectedAI);
+  });
+  updateKeyHint(selectedAI);
+}
+
+function selectAI(ai, btn) {
+  selectedAI = ai;
+  document.querySelectorAll('.ai-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('aiWarning').classList.toggle('show', ai !== 'claude');
+  updateKeyHint(ai);
+}
+
+function updateKeyHint(ai) {
+  const configs = {
+    claude: { label: 'Anthropic API 키', placeholder: 'sk-ant-...', href: 'https://console.anthropic.com', text: 'console.anthropic.com' },
+    gemini: { label: 'Google Gemini API 키', placeholder: 'AIza...', href: 'https://aistudio.google.com/app/apikey', text: 'aistudio.google.com' },
+    gpt:    { label: 'OpenAI API 키', placeholder: 'sk-...', href: 'https://platform.openai.com/api-keys', text: 'platform.openai.com' }
+  };
+  const c = configs[ai];
+  document.getElementById('keyLabel').textContent = c.label;
+  document.getElementById('apiKeyInput').placeholder = c.placeholder;
+  document.getElementById('keyHint').innerHTML = `API 키 발급: <a href="${c.href}" target="_blank">${c.text}</a>`;
+  document.getElementById('apiKeyInput').value = localStorage.getItem('mpb_key_' + ai) || '';
+}
+
 function updateApiStatus() {
-  const dot = document.getElementById('apiDot');
-  const status = document.getElementById('apiStatus');
-  if (apiKey) {
-    dot.classList.add('on');
-    status.textContent = 'API 연결됨';
-  } else {
-    dot.classList.remove('on');
-    status.textContent = 'API 키 설정';
-  }
+  const connected = !!apiKey;
+  const label = { claude: 'Claude', gemini: 'Gemini', gpt: 'ChatGPT' }[aiProvider] || 'AI';
+  document.getElementById('apiDot').classList.toggle('on', connected);
+  document.getElementById('apiStatus').textContent = connected ? label + ' 연결됨' : 'API 키 설정';
+  document.getElementById('apiBadge').classList.toggle('connected', connected);
+  document.getElementById('logoutBtn').classList.toggle('show', connected);
 }
 
 async function startConversation() {
@@ -414,48 +289,34 @@ async function startConversation() {
     return;
   }
   showTyping();
-  const reply = await callClaude([]);
+  const reply = await callAI([]);
   hideTyping();
-  if (reply) {
-    addBubble('ai', reply);
-    history.push({ role: 'assistant', content: reply });
-  }
+  if (reply) { addBubble('ai', reply); history.push({ role: 'assistant', content: reply }); }
 }
 
-// ── Send ──
 async function sendMessage() {
   if (isLoading) return;
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
-
-  if (!apiKey) {
-    openModal();
-    return;
-  }
-
+  if (!apiKey) { openModal(); return; }
   input.value = '';
   autoResize(input);
   addBubble('user', text);
   history.push({ role: 'user', content: text });
-
   isLoading = true;
   document.getElementById('sendBtn').disabled = true;
   showTyping();
-
-  const reply = await callClaude(history);
+  const reply = await callAI(history);
   hideTyping();
   isLoading = false;
   document.getElementById('sendBtn').disabled = false;
-
   if (reply) {
-    // 프롬프트 추출
     const match = reply.match(/===PROMPT_START===([\s\S]*?)===PROMPT_END===/);
     if (match) {
-      const cleanReply = reply.replace(/===PROMPT_START===[\s\S]*?===PROMPT_END===/, '').trim();
-      if (cleanReply) addBubble('ai', cleanReply);
+      const clean = reply.replace(/===PROMPT_START===[\s\S]*?===PROMPT_END===/, '').trim();
+      if (clean) addBubble('ai', clean);
       showResult(match[1].trim());
-      promptGenerated = true;
     } else {
       addBubble('ai', reply);
     }
@@ -463,187 +324,143 @@ async function sendMessage() {
   }
 }
 
-// ── Claude API ──
+async function callAI(msgs) {
+  if (aiProvider === 'claude') return callClaude(msgs);
+  if (aiProvider === 'gemini') return callGemini(msgs);
+  return callGPT(msgs);
+}
+
 async function callClaude(msgs) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        system: SYSTEM,
-        messages: msgs.length === 0
-          ? [{ role: 'user', content: '시작해줘' }]
-          : msgs
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: SYSTEM, messages: msgs.length === 0 ? [{ role: 'user', content: '시작해줘' }] : msgs })
     });
-    if (!res.ok) {
-      const err = await res.json();
-      showToast('API 오류: ' + (err.error?.message || res.status));
-      return null;
-    }
-    const data = await res.json();
-    return data.content?.[0]?.text || null;
-  } catch (e) {
-    showToast('네트워크 오류가 발생했어요');
-    return null;
-  }
+    if (!res.ok) { const e = await res.json(); showToast('Claude 오류: ' + (e.error?.message || res.status)); return null; }
+    return (await res.json()).content?.[0]?.text || null;
+  } catch { showToast('네트워크 오류'); return null; }
 }
 
-// ── UI helpers ──
+async function callGemini(msgs) {
+  try {
+    const contents = msgs.length === 0
+      ? [{ role: 'user', parts: [{ text: '시작해줘' }] }]
+      : msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ system_instruction: { parts: [{ text: SYSTEM }] }, contents })
+    });
+    if (!res.ok) { const e = await res.json(); showToast('Gemini 오류: ' + (e.error?.message || res.status)); return null; }
+    return (await res.json()).candidates?.[0]?.content?.parts?.[0]?.text || null;
+  } catch { showToast('네트워크 오류'); return null; }
+}
+
+async function callGPT(msgs) {
+  try {
+    const messages = [{ role: 'system', content: SYSTEM },
+      ...(msgs.length === 0 ? [{ role: 'user', content: '시작해줘' }] : msgs.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })))];
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: 'gpt-4o', max_tokens: 1500, messages })
+    });
+    if (!res.ok) { const e = await res.json(); showToast('GPT 오류: ' + (e.error?.message || res.status)); return null; }
+    return (await res.json()).choices?.[0]?.message?.content || null;
+  } catch { showToast('네트워크 오류'); return null; }
+}
+
 function addBubble(role, text) {
   const wrap = document.getElementById('chatWrap');
   const row = document.createElement('div');
   row.className = 'bubble-row ' + role;
-
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar ' + role;
-  avatar.textContent = role === 'ai' ? '✦' : '나';
-
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ' + role;
-  bubble.textContent = text;
-
-  row.appendChild(avatar);
-  row.appendChild(bubble);
-  wrap.appendChild(row);
-  scrollBottom();
+  const av = document.createElement('div');
+  av.className = 'avatar ' + role;
+  av.textContent = role === 'ai' ? '✦' : '나';
+  const bub = document.createElement('div');
+  bub.className = 'bubble ' + role;
+  bub.textContent = text;
+  row.appendChild(av); row.appendChild(bub);
+  wrap.appendChild(row); scrollBottom();
 }
 
 let typingEl = null;
 function showTyping() {
   const wrap = document.getElementById('chatWrap');
   const row = document.createElement('div');
-  row.className = 'bubble-row ai';
-  row.id = 'typingRow';
-
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar ai';
-  avatar.textContent = '✦';
-
-  const typing = document.createElement('div');
-  typing.className = 'typing';
-  typing.innerHTML = '<span></span><span></span><span></span>';
-
-  row.appendChild(avatar);
-  row.appendChild(typing);
-  wrap.appendChild(row);
-  typingEl = row;
-  scrollBottom();
+  row.className = 'bubble-row ai'; row.id = 'typingRow';
+  const av = document.createElement('div'); av.className = 'avatar ai'; av.textContent = '✦';
+  const t = document.createElement('div'); t.className = 'typing'; t.innerHTML = '<span></span><span></span><span></span>';
+  row.appendChild(av); row.appendChild(t); wrap.appendChild(row);
+  typingEl = row; scrollBottom();
 }
-
-function hideTyping() {
-  if (typingEl) { typingEl.remove(); typingEl = null; }
-}
+function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
 
 function showResult(promptText) {
   const wrap = document.getElementById('chatWrap');
-  const row = document.createElement('div');
-  row.className = 'bubble-row ai';
-
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar ai';
-  avatar.textContent = '✦';
-
-  const resultWrap = document.createElement('div');
-  resultWrap.className = 'result-wrap';
-  resultWrap.innerHTML = `
-    <div class="result-label">✓ 마스터 프롬프트 완성</div>
-    <div class="result-text">${escHtml(promptText)}</div>
-    <div class="result-actions">
-      <button class="btn-copy" onclick="copyPrompt(this)">📋 복사하기</button>
-      <button class="btn-dl" onclick="downloadTxt(this)">⬇ .txt 저장</button>
-      <button class="btn-new" onclick="location.reload()">🔄 새 프로젝트</button>
-    </div>
-  `;
-  resultWrap._promptText = promptText;
-
-  row.appendChild(avatar);
-  row.appendChild(resultWrap);
-  wrap.appendChild(row);
-  scrollBottom();
+  const row = document.createElement('div'); row.className = 'bubble-row ai';
+  const av = document.createElement('div'); av.className = 'avatar ai'; av.textContent = '✦';
+  const rw = document.createElement('div'); rw.className = 'result-wrap';
+  rw.innerHTML = `<div class="result-label">✓ 마스터 프롬프트 완성</div><div class="result-text">${escHtml(promptText)}</div><div class="result-actions"><button class="btn-copy" onclick="copyPrompt(this)">📋 복사하기</button><button class="btn-dl" onclick="downloadTxt(this)">⬇ .txt 저장</button><button class="btn-new" onclick="location.reload()">🔄 새 프로젝트</button></div>`;
+  rw._promptText = promptText;
+  row.appendChild(av); row.appendChild(rw); wrap.appendChild(row); scrollBottom();
 }
 
-function copyPrompt(btn) {
-  const text = btn.closest('.result-wrap')._promptText;
-  navigator.clipboard.writeText(text).then(() => showToast('클립보드에 복사됐어요!'));
-}
-
+function copyPrompt(btn) { navigator.clipboard.writeText(btn.closest('.result-wrap')._promptText).then(() => showToast('클립보드에 복사됐어요!')); }
 function downloadTxt(btn) {
-  const text = btn.closest('.result-wrap')._promptText;
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'master_prompt.txt';
-  a.click();
-  URL.revokeObjectURL(url);
+  const blob = new Blob([btn.closest('.result-wrap')._promptText], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'master_prompt.txt'; a.click();
 }
+function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function scrollBottom() { const w = document.getElementById('chatWrap'); setTimeout(() => w.scrollTop = w.scrollHeight, 50); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 
-function escHtml(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function scrollBottom() {
-  const wrap = document.getElementById('chatWrap');
-  setTimeout(() => wrap.scrollTop = wrap.scrollHeight, 50);
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ── Input auto-resize ──
 const userInput = document.getElementById('userInput');
 userInput.addEventListener('input', () => autoResize(userInput));
-userInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
+userInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 
-// ── Modal ──
 function openModal() {
-  document.getElementById('apiKeyInput').value = apiKey;
+  selectedAI = aiProvider;
+  syncAIButtons();
+  document.getElementById('aiWarning').classList.toggle('show', aiProvider !== 'claude');
   document.getElementById('modalBg').classList.add('show');
 }
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('show');
-}
+function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+
 function saveKey() {
   const val = document.getElementById('apiKeyInput').value.trim();
-  if (!val.startsWith('sk-ant-')) {
-    showToast('올바른 API 키 형식이 아니에요 (sk-ant-로 시작)');
-    return;
-  }
+  if (!val) { showToast('API 키를 입력해주세요'); return; }
+  if (selectedAI === 'claude' && !val.startsWith('sk-ant-')) { showToast('Claude 키는 sk-ant-로 시작해요'); return; }
+  if (selectedAI === 'gpt' && !val.startsWith('sk-')) { showToast('OpenAI 키는 sk-로 시작해요'); return; }
   apiKey = val;
+  aiProvider = selectedAI;
   localStorage.setItem('mpb_key', apiKey);
+  localStorage.setItem('mpb_key_' + selectedAI, apiKey);
+  localStorage.setItem('mpb_ai', aiProvider);
   updateApiStatus();
   closeModal();
-  showToast('API 키가 저장됐어요!');
+  showToast('저장됐어요!');
   if (document.getElementById('chatWrap').children.length <= 1) {
     document.getElementById('chatWrap').innerHTML = '';
     history = [];
     startConversation();
   }
 }
-document.getElementById('modalBg').addEventListener('click', e => {
-  if (e.target === document.getElementById('modalBg')) closeModal();
-});
+
+function openLogoutModal() { document.getElementById('logoutModalBg').classList.add('show'); }
+function closeLogoutModal() { document.getElementById('logoutModalBg').classList.remove('show'); }
+function doLogout() {
+  ['mpb_key','mpb_key_claude','mpb_key_gemini','mpb_key_gpt','mpb_ai'].forEach(k => localStorage.removeItem(k));
+  apiKey = ''; aiProvider = 'claude';
+  closeLogoutModal();
+  showToast('로그아웃됐어요. API 키가 삭제됐습니다.');
+  setTimeout(() => location.reload(), 1200);
+}
+
+document.getElementById('modalBg').addEventListener('click', e => { if (e.target === document.getElementById('modalBg')) closeModal(); });
+document.getElementById('logoutModalBg').addEventListener('click', e => { if (e.target === document.getElementById('logoutModalBg')) closeLogoutModal(); });
 </script>
 </body>
 </html>
